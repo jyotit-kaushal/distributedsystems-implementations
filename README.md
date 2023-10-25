@@ -18,6 +18,7 @@ go run vectorclock.go
 go run bullyalgorithm.go
 ```
 
+If you're having any issues please contact me on tele @jyotit_kaushal
 
 ### Prob 1.1- Implementing Lamport's Logical Clock for Total Ordering of Events
 

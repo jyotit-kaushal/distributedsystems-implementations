@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+// setting all the parameters- can be changed based on what you want to check
+
 const (
 	tnmtbsbc int     = 3  //total number of messages to be sent by client
 	tnoc     int     = 10 // total number of clients
@@ -16,6 +18,7 @@ const (
 	mddtn    float32 = 2  // max delay due to network
 )
 
+// setting basic classes
 type server struct {
 	channel     chan message
 	clientArray []client
@@ -45,6 +48,7 @@ type logTS struct {
 
 func main() {
 
+	// initializing server and all clients
 	server := instantiateServer()
 
 	for i := 1; i <= tnoc; i++ {
@@ -58,8 +62,8 @@ func main() {
 
 	for _, client := range server.clientArray {
 
-		go client.clientSendRoutine()
-		go client.clientMainRoutine(parentChannel)
+		go client.clientSendRoutine()              // starting client routine that puts itself in the ready channel indicating it's going to send messages
+		go client.clientMainRoutine(parentChannel) // main client routine that actually sends the messages and also listens for broadcasted msgs from server and prints them out
 
 	}
 
@@ -77,6 +81,7 @@ func main() {
 		allMessages = append(allMessages, message)
 	}
 
+	// sorting the messages based on their logical clocks
 	sort.Slice(allMessages, func(i, j int) bool {
 		return allMessages[i].logicalTS < allMessages[j].logicalTS
 	})
@@ -106,6 +111,7 @@ func broadcastMessage(clientChannel chan message, msg message) {
 	return
 }
 
+// function that handles coin toss and is basically the server listening for msgs from clients
 func (s server) listen(parentChannel chan message) {
 
 	var activeclientCount int = tnoc

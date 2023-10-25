@@ -5,7 +5,6 @@ import (
 	"log"
 	"net"
 	"net/rpc"
-	"time"
 )
 
 type Message struct {
@@ -18,7 +17,7 @@ type DistributedSystemSim struct {
 	ids_ip         map[int]string
 }
 
-var distsystem = DistributedSystemSim{
+var distsystem = DistributedSystemSim{ // creating an instance of the main class of distributedsystem that contains id-ip mapping and what current ip is there
 	node_id:        1,
 	coordinator_id: 5,
 	ids_ip: map[int]string{
@@ -33,7 +32,7 @@ var distsystem = DistributedSystemSim{
 var no_election_invoked = true
 var superiorNodeAvailable = false
 
-func (distsystem *DistributedSystemSim) Election(invoker_id int, reply *Message) error {
+func (distsystem *DistributedSystemSim) Election(invoker_id int, reply *Message) error { // function that receives and acknowledges an election from a lower node than itself
 	fmt.Println("Getting Election Request from Node: ", invoker_id)
 
 	if invoker_id < distsystem.node_id {
@@ -49,7 +48,7 @@ func (distsystem *DistributedSystemSim) Election(invoker_id int, reply *Message)
 	return nil
 }
 
-func invokeElection() {
+func invokeElection() { // function to invoke election in all nodes more than itself
 	for id, ip := range distsystem.ids_ip {
 
 		reply := Message{""}
@@ -88,7 +87,7 @@ func invokeElection() {
 	no_election_invoked = true
 }
 
-func setCoordinator() {
+func setCoordinator() { // called when new coordinator has been decided
 
 	reply := Message{""}
 
@@ -99,7 +98,7 @@ func setCoordinator() {
 		if error != nil {
 			continue
 		}
-		time.Sleep(time.Duration(5) * time.Second)
+		// time.Sleep(time.Duration(5) * time.Second)
 
 		client.Call("DistributedSystemSim.SetCoordinatorHelper", distsystem.node_id, &reply)
 	}
@@ -113,13 +112,13 @@ func (distsystem *DistributedSystemSim) SetCoordinatorHelper(id int, reply *Mess
 	return nil
 }
 
-func (distsystem *DistributedSystemSim) ReplyCheck(req_id int, reply *Message) error {
+func (distsystem *DistributedSystemSim) ReplyCheck(req_id int, reply *Message) error { // Checking if there has been an acknowledhement for whatever message was sent
 	fmt.Println("Getting Request from Node: ", req_id)
 	reply.Data = "OK"
 	return nil
 }
 
-func SendRequesttoCoordinator() {
+func SendRequesttoCoordinator() { // function to send request to coordinator- will invoke election if it doesn't receive an acknowledgement
 
 	coord_id := distsystem.coordinator_id
 	coord_ip := distsystem.ids_ip[coord_id]
@@ -158,7 +157,7 @@ func main() {
 	distsystem.node_id = node_id
 	my_ip := distsystem.ids_ip[distsystem.node_id]
 
-	ip, err := net.ResolveTCPAddr("tcp", my_ip)
+	ip, err := net.ResolveTCPAddr("tcp", my_ip) // Resolve the IP address for the RPC server
 
 	if err != nil {
 		log.Fatal(err)
@@ -183,9 +182,9 @@ func main() {
 		fmt.Scanf("%s", &linecheck)
 
 		if linecheck == "Yes" {
-			invokeElection()
+			invokeElection() // Invoke election if node is reentering the system
 		} else {
-			SendRequesttoCoordinator()
+			SendRequesttoCoordinator() // Send request to coordinator when hit Enter
 		}
 
 		fmt.Println("")

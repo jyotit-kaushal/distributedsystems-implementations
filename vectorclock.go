@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// setting all the parameters- can be changed based on what you want to check
 const (
 	tnmtbsbc int     = 3  //total number of messages to be sent by client
 	tnoc     int     = 10 // total number of clients
@@ -16,6 +17,7 @@ const (
 	tnop     int     = 11 // total number of processes
 )
 
+// setting basic classes
 type server struct {
 	pid         int
 	channel     chan message
@@ -42,6 +44,8 @@ type client struct {
 
 func main() {
 
+	// initializing server and all clients
+
 	server := instantiateServer(0)
 
 	for i := 1; i <= tnoc; i++ {
@@ -57,8 +61,8 @@ func main() {
 
 	for _, client := range server.clientArray {
 
-		go client.clientSendRoutine()
-		go client.clientMainRoutine(parentChannel, pcvChannel)
+		go client.clientSendRoutine()                          // starting client routine that puts itself in the ready channel indicating it's going to send messages
+		go client.clientMainRoutine(parentChannel, pcvChannel) // main client routine that actually sends the messages and also listens for broadcasted msgs from server and prints them out
 
 	}
 
@@ -77,6 +81,7 @@ func main() {
 		allMessages = append(allMessages, message)
 	}
 
+	// sorting the messages based on their vector clocks
 	sort.Slice(allMessages, func(i, j int) bool {
 		return sortingHelper(allMessages[i].vectorClock, allMessages[j].vectorClock)
 	})
@@ -100,6 +105,7 @@ func main() {
 
 }
 
+// function to compare the vector clocks for ordereing
 func sortingHelper(v1 [tnop]int, v2 [tnop]int) bool {
 
 	for i, _ := range v1 {
@@ -111,6 +117,7 @@ func sortingHelper(v1 [tnop]int, v2 [tnop]int) bool {
 
 }
 
+// function that combines clocks by taking max of each pid
 func combineClocks(vectorClock1 [tnop]int, vectorClock2 [tnop]int, receiverPID int) [tnop]int {
 
 	res := [tnop]int{}
@@ -123,6 +130,7 @@ func combineClocks(vectorClock1 [tnop]int, vectorClock2 [tnop]int, receiverPID i
 	return res
 }
 
+// function to check if there is a pcv
 func pcvCheck(vectorClock1 [tnop]int, vectorClock2 [tnop]int) bool {
 
 	for i, _ := range vectorClock1 {
@@ -152,6 +160,7 @@ func broadcastMessage(clientChannel chan message, msg message) {
 	return
 }
 
+// function that handles coin toss and is basically the server listening for msgs from clients
 func (s server) listen(parentChannel chan message, pcvChannel chan string) {
 
 	var activeclientCount int = tnoc
@@ -215,7 +224,6 @@ func (s *server) registerClient(c client) []client {
 	return s.clientArray
 }
 
-// Constructor for client
 func instantiateClient(pid int, name string, s server) *client {
 
 	clientChannel := make(chan message)
