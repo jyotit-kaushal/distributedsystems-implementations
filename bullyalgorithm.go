@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/rpc"
+	"time"
 )
 
 type Message struct {
@@ -98,7 +99,7 @@ func setCoordinator() { // called when new coordinator has been decided
 		if error != nil {
 			continue
 		}
-		// time.Sleep(time.Duration(5) * time.Second)
+		time.Sleep(time.Duration(5) * time.Second)
 
 		client.Call("DistributedSystemSim.SetCoordinatorHelper", distsystem.node_id, &reply)
 	}

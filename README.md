@@ -319,9 +319,9 @@ Nice and simple, it has been chosen as the coordinator and it's reflected in all
 
 ### Point 3.a Newly Elected Coordinator Failure During Announcement:
 
-Now, originally since there's no need the line which causes a delay when announcing itself as a leader has been commented out. But for the rest of the scenarios (i.e. 3, and 4)- please uncomment this line to see effects take place- It is Line 102 in the original file, if not you can find it in the ```setCoordinator()`` function. Please contact me on Tele @jyotit_kaushal if you can't find it.
+Now, originally since there's no need the line which causes a delay when announcing itself as a leader has just a 1 second delay (very minimal). But for the rest of the scenarios (i.e. 3, and 4)- please change this line to be delayed for 5 seconds instead making it easier to see the scenarios listed below- It is Line 102 in the original file, if not you can find it in the ```setCoordinator()`` function. Please contact me on Tele @jyotit_kaushal if you can't find it.
 ```
-// time.Sleep(time.Duration(5) * time.Second)
+time.Sleep(time.Duration(1) * time.Second)
 ```
 Once this is done, you can simulate the case where the elected coordinator fails during announcement. In this case, you'll essentially have two copies of the coordinators based on which node you are. But either way when you hit enter to try to talk with the coordinator no matter which node you are- you'll realize the coordinator is down and this will start a new election. Hence, there will not be any functional issues with the program. 
 
@@ -331,7 +331,7 @@ If the failed node is not the newly elected coordinator then there will not be a
 ### Point 3 is hence satisfied by this implementation.
 
 ### Point 4 Multiple Nodes Start the Election
-You can simulate this by hitting Enter on two different nodes at relatively the same time (within 5 seconds) and you'll now have started an election in 2 nodes simultaneously. This again would not break the system since the implementation of bully algorithm is not affected by this, all the messages will be displayed in the same fashion, just that there will be more messages now on both ends but in the end the right coordinator will be picked which will be told to every node so no worries.
+You can simulate this by hitting Enter on two different nodes at relatively the same time (within 5 seconds) and you'll now have started an election in 2 nodes simultaneously. This again would not break the system since the implementation of bully algorithm is not affected by this, all the messages will be displayed in the same fashion, just that there will be more messages now on both ends but in the end the right coordinator will be picked which will be told to every node so no worries. You will basically see the coordinator messages in the correct order.
 
  ### Point 4 is hence satisfied by this implementation.
 
