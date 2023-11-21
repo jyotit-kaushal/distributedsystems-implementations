@@ -86,7 +86,7 @@ func main() {
 		return allMessages[i].logicalTS < allMessages[j].logicalTS
 	})
 
-	fmt.Println("\n|XXXX| Total Order of All Messages Below: |XXXX|\n")
+	fmt.Println("\n|XXXX| Total Order of All Messages Below: |XXXX|")
 
 	for i, message := range allMessages {
 		fmt.Printf("|XX| %d. |XX| Logical Clock: %d |XX| Message: %s |XX| Received By: %s |XX| Sent By: %s |XX| \n", i, message.logicalTS, message.text, message.receiver, message.sender)
