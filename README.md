@@ -621,7 +621,7 @@ Rest all remains the same, and the time is printed as before. In the next sessio
   
 | Scenario| Associated time taken by Simulation to run  |
 |--|--|
-| Ivy Without Fault Tolerance |  |
+| Ivy Without Fault Tolerance | 19.79 seconds |
 | Ivy With Fault Tolerance- Scenario 1|21.45 seconds|
 | Ivy With Fault Tolerance- Scenario 2 | 21.28 seconds |
 | Ivy With Fault Tolerance- Scenario 3|21.38 seconds|
